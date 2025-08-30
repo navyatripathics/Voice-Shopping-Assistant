@@ -1,10 +1,6 @@
-<<<<<<< HEAD
 
-=======
 Flask==3.0.3
 Werkzeug==3.0.3
 Jinja2==3.1.4
 Click==8.1.7
 itsdangerous==2.2.0
-
->>>>>>> 92f103f (Your commit message)
