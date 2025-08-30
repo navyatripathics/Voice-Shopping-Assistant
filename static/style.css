@@ -1,0 +1,259 @@
+/* ========== GENERAL ========== */
+body {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  margin: 0;
+  padding: 0;
+  background: #f8f9ff;
+  color: #333;
+  transition: background 0.3s, color 0.3s;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 20px auto;
+  padding: 15px;
+}
+
+/* ========== HEADER ========== */
+header {
+  background: linear-gradient(135deg, #6a11cb, #2575fc); /* Diagonal gradient */
+  padding: 25px;
+  color: white;
+  text-align: center;
+  border-bottom-left-radius: 40px;
+  border-bottom-right-radius: 40px;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.15);
+}
+
+header h1 {
+  font-size: 2.5rem;
+  letter-spacing: 1px;
+  margin: 0;
+}
+
+header p {
+  margin-top: 8px;
+  font-size: 1rem;
+  opacity: 0.9;
+}
+
+/* ========== VOICE CONTROL PANEL ========== */
+.voice-panel {
+  background: #fff;
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+  margin-bottom: 20px;
+}
+
+#start-btn {
+  border-radius: 50%;
+  width: 75px;
+  height: 75px;
+  background: #ff4d6d;
+  color: white;
+  font-size: 1.8rem;
+  border: none;
+  cursor: pointer;
+  transition: 0.3s;
+  display: block;
+  margin: 10px auto;
+}
+
+#start-btn:hover {
+  background: #ff3355;
+}
+
+#start-btn.listening {
+  box-shadow: 0 0 20px 5px rgba(255, 77, 109, 0.6);
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+  100% { transform: scale(1); }
+}
+
+.command-box {
+  background: #f1f4ff;
+  padding: 8px 12px;
+  border-left: 4px solid #2575fc;
+  border-radius: 6px;
+  margin-top: 8px;
+  font-size: 0.9rem;
+}
+
+/* ========== SHOPPING LIST ========== */
+.shopping-list {
+  background: #fff;
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+}
+
+.shopping-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #fafafa;
+  border-radius: 12px;
+  padding: 10px 15px;
+  margin-bottom: 12px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+}
+
+.item-left {
+  display: flex;
+  flex-direction: column;
+}
+
+.item-name {
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.category-badge {
+  background: #eaeaea;
+  border-radius: 20px;
+  padding: 3px 10px;
+  font-size: 0.75rem;
+  margin-top: 3px;
+  width: fit-content;
+}
+
+.quantity-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.qty-btn {
+  background: #2575fc;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 28px;
+  height: 28px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.qty-btn:hover {
+  background: #1a5dd9;
+}
+
+.remove-btn {
+  background: #ff4d6d;
+  border: none;
+  border-radius: 50%;
+  width: 28px;
+  height: 28px;
+  color: white;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.remove-btn:hover {
+  background: #e63956;
+}
+
+/* ========== SMART SUGGESTIONS ========== */
+.suggestions {
+  margin-top: 15px;
+}
+
+.suggestion-bar {
+  display: flex;
+  overflow-x: auto;
+  gap: 10px;
+  margin-top: 10px;
+  padding-bottom: 5px;
+}
+
+.suggestion-card {
+  flex: 0 0 auto;
+  background: #eef4ff;
+  padding: 10px 15px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: 0.3s;
+  font-size: 0.9rem;
+}
+
+.suggestion-card:hover {
+  background: #dce7ff;
+}
+
+/* ========== AVAILABLE ITEMS GRID ========== */
+.available-items {
+  background: #fff;
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+  margin-top: 20px;
+}
+
+.items-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 15px;
+}
+
+.item-card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 12px;
+  text-align: center;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+  transition: transform 0.2s;
+}
+
+.item-card:hover {
+  transform: translateY(-5px);
+}
+
+.item-card h4 {
+  margin: 5px 0;
+}
+
+.add-btn {
+  background: #2575fc;
+  border: none;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: 0.2s;
+}
+
+.add-btn:hover {
+  background: #1a5dd9;
+}
+
+/* ========== DARK MODE ========== */
+body.dark {
+  background: #181818;
+  color: #eee;
+}
+
+body.dark header {
+  background: linear-gradient(135deg, #141e30, #243b55);
+}
+
+body.dark .voice-panel,
+body.dark .shopping-list,
+body.dark .available-items {
+  background: #222;
+  color: #eee;
+}
+
+body.dark .shopping-item {
+  background: #2c2c2c;
+}
+
+body.dark .item-card {
+  background: #2c2c2c;
+}

@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Voice Shopping Assistant</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <!-- HEADER -->
+  <header>
+    <h1>🛒 Voice Shopping Assistant</h1>
+    <p>Your personal voice-powered grocery assistant</p>
+    <div style="position: absolute; top: 20px; right: 30px;">
+      <label class="theme-toggle">
+        <input type="checkbox" id="theme-switch">
+        🌙/☀️
+      </label>
+    </div>
+  </header>
+
+  <div class="container">
+    <!-- VOICE PANEL -->
+    <div class="voice-panel">
+      <button id="start-btn">🎤</button>
+      <div id="status" class="command-box">Press the mic to start</div>
+    </div>
+
+    <!-- SHOPPING LIST -->
+    <div class="shopping-list">
+      <h2>🛍️ Your Cart</h2>
+      <div id="shopping-list">
+        {% for item in cart %}
+        <div class="shopping-item">
+          <div class="item-left">
+            <span class="item-name">{{ item.emoji }} {{ item.name.title() }}</span>
+            <span class="category-badge">{{ item.category }}</span>
+          </div>
+          <div class="quantity-controls">
+            <button class="qty-btn">-</button>
+            <span>{{ item.quantity }}</span>
+            <button class="qty-btn">+</button>
+            <button class="remove-btn">×</button>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+      <h3>Total: $<span id="total">{{ total }}</span></h3>
+
+      <!-- SMART SUGGESTIONS -->
+      <div class="suggestions">
+        <h3>✨ Smart Suggestions</h3>
+        <div id="suggestion-bar" class="suggestion-bar"></div>
+      </div>
+    </div>
+
+    <!-- AVAILABLE ITEMS -->
+    <div class="available-items">
+      <h2>📦 Available Items</h2>
+      <div class="items-grid">
+        {% for name, details in PRODUCT_CATALOG.items() %}
+        <div class="item-card">
+          <h4>{{ details.emoji }} {{ name.title() }}</h4>
+          <p>${{ details.price }} | {{ details.category }}</p>
+          <button class="add-btn" onclick="addDirect('{{ name }}')">Add</button>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+
+  <!-- JAVASCRIPT -->
+  <script>
+    const startBtn = document.getElementById("start-btn");
+    const statusBox = document.getElementById("status");
+    const shoppingList = document.getElementById("shopping-list");
+    const totalBox = document.getElementById("total");
+    const suggestionBar = document.getElementById("suggestion-bar");
+
+    // Speech recognition
+    let recognition;
+    if ('SpeechRecognition' in window || 'webkitSpeechRecognition' in window) {
+      recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+      recognition.lang = "en-US";
+
+      startBtn.onclick = () => {
+        recognition.start();
+        startBtn.classList.add("listening");
+        statusBox.innerText = "Listening...";
+      };
+
+      recognition.onend = () => {
+        startBtn.classList.remove("listening");
+      };
+
+      recognition.onresult = function(event) {
+        const command = event.results[0][0].transcript;
+        statusBox.innerText = "You said: " + command;
+        processCommand(command);
+      };
+    } else {
+      statusBox.innerText = "❌ Speech recognition not supported in this browser.";
+      startBtn.disabled = true;
+    }
+
+    // Process voice/typed command
+    function processCommand(command) {
+      fetch("/add-item", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ command })
+      })
+      .then(res => res.json())
+      .then(data => {
+        statusBox.innerText = data.message;
+        updateCart(data.cart, data.total);
+        updateSuggestions(data.suggestions);
+      });
+    }
+
+    // Update cart display
+    function updateCart(cart, total) {
+      shoppingList.innerHTML = "";
+      cart.forEach(item => {
+        let div = document.createElement("div");
+        div.className = "shopping-item";
+        div.innerHTML = `
+          <div class="item-left">
+            <span class="item-name">${item.emoji} ${item.name}</span>
+            <span class="category-badge">${item.category}</span>
+          </div>
+          <div class="quantity-controls">
+            <button class="qty-btn" onclick="processCommand('remove 1 ${item.name}')">-</button>
+            <span>${item.quantity}</span>
+            <button class="qty-btn" onclick="processCommand('add 1 ${item.name}')">+</button>
+            <button class="remove-btn" onclick="processCommand('remove ${item.quantity} ${item.name}')">×</button>
+          </div>
+        `;
+        shoppingList.appendChild(div);
+      });
+      totalBox.innerText = total.toFixed(2);
+    }
+
+    // Update smart suggestions
+    function updateSuggestions(suggestions) {
+      suggestionBar.innerHTML = "";
+      suggestions.forEach(s => {
+        let div = document.createElement("div");
+        div.className = "suggestion-card";
+        div.innerText = s;
+        div.onclick = () => processCommand("add 1 " + s);
+        suggestionBar.appendChild(div);
+      });
+    }
+
+    // Add directly from Available Items grid
+    function addDirect(item) {
+      processCommand("add 1 " + item);
+    }
+
+    // Theme toggle
+    const themeSwitch = document.getElementById("theme-switch");
+    themeSwitch.addEventListener("change", () => {
+      document.body.classList.toggle("dark");
+    });
+  </script>
+</body>
+</html>
